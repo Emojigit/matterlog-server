@@ -15,6 +15,7 @@ if "MATTERLOGSERVER_PROXY_LEVEL" in os.environ:
     )
 
 logs_path = os.environ.get("MATTERLOGSERVER_LOGS_PATH", "./logs")
+logs_base_url = os.environ.get("MATTERLOGSERVER_LOGS_BASE_URL", "")
 
 
 def list_chatrooms():
@@ -70,8 +71,10 @@ def chatroom_index(chatroom):
     </head>
     <body>
     <h1>Chatroom {e(chatroom)}</h1>
-    <ul>
     """
+    if logs_base_url != "":
+        responce += f'<p><a href="{e(logs_base_url)}/{e(chatroom)}/">Browse raw logs</a></p>'
+    responce += "<ul>"
 
     for year_dir in sorted(
             (d for d in os.listdir(chatroom_dir)
@@ -227,6 +230,12 @@ def chat_log(chatroom, year, month, day):
     </head>
     <body>
     <h1>Chat log for {e(chatroom)} on {e(year)}-{e(month)}-{e(day)}</h1>
+    """
+
+    if logs_base_url != "":
+        responce += f'<p><a href="{e(logs_base_url)}/{e(chatroom)}/{e(year)}/{e(month)}/{e(day)}.txt">View raw logs</a></p>'
+
+    responce += """
     <table id="chatlog">
     <tr><th>#</th><th>Time</th><th>User</th><th>Message</th></tr>
     """
