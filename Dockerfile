@@ -9,4 +9,4 @@ COPY COPYING.txt /app/COPYING.txt
 
 WORKDIR /app
 VOLUME ["/app/logs"]
-ENTRYPOINT ["python", "-m", "gunicorn", "matterlog-server:app"]
+ENTRYPOINT ["python", "-u", "-m", "gunicorn", "matterlog-server:app"]
