@@ -156,30 +156,9 @@ def search_chatroom(chatroom):
     <html lang="en">
     <head>
     <title>Search results for "{e(query)}" in {e(chatroom)} - Matterlog</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-    #chatlog {{
-        width: 100%;
-        overflow-x: auto;
-        border: 1px solid black;
-        border-collapse: collapse;
-    }}
-    #chatlog tr td, #chatlog tr th {{
-        width: max-content;
-        border-bottom: 1px solid black;
-        vertical-align: top;
-        text-align: left;
-        padding-left: 4px;
-        padding-right: 4px;
-    }}
-    #chatlog tr:target {{
-        background-color: yellow;
-    }}
-    .chatlog-message {{
-        font-family: monospace;
-    }}
-    </style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../../static/style.css" />
     </head>
     <body>
     <h1>Search results for "{e(query)}" in {e(chatroom)}</h1>
@@ -240,28 +219,7 @@ def chat_log(chatroom, year, month, day):
     <title>Chat log for {e(chatroom)} on {e(year)}-{e(month)}-{e(day)} - Matterlog</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-    #chatlog {{
-        width: 100%;
-        overflow-x: auto;
-        border: 1px solid black;
-        border-collapse: collapse;
-    }}
-    #chatlog tr td, #chatlog tr th {{
-        width: max-content;
-        border-bottom: 1px solid black;
-        vertical-align: top;
-        text-align: left;
-        padding-left: 4px;
-        padding-right: 4px;
-    }}
-    #chatlog tr:target {{
-        background-color: yellow;
-    }}
-    .chatlog-message {{
-        font-family: monospace;
-    }}
-    </style>
+    <link rel="stylesheet" href="../../../../../static/style.css" />
     </head>
     <body>
     <h1>Chat log for {e(chatroom)} on {e(year)}-{e(month)}-{e(day)}</h1>
