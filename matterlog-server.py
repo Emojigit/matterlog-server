@@ -118,8 +118,8 @@ def search_chatroom(chatroom):
     if not os.path.isdir(chatroom_dir):
         return Response("Chatroom not found", status=404, mimetype="text/plain")
 
-    query = request.args.get("q", "").strip()
-    if not query:
+    query = request.args.get("q", "").strip().lower()
+    if query == "":
         return Response("No search query provided", status=400, mimetype="text/plain")
 
     results = []
@@ -145,7 +145,7 @@ def search_chatroom(chatroom):
                 with open(log_file_path, "r", encoding="utf-8") as log_file:
                     for i, line in enumerate(log_file):
                         datetimestring, user, message = line.strip().split("\t", 2)
-                        if query in message:
+                        if query in message.lower():
                             datetimeobject = datetime.strptime(
                                 datetimestring, r'%Y-%m-%dT%H:%M:%S.%f%z')
                             results.append(
