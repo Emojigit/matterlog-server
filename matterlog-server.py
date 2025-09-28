@@ -93,6 +93,10 @@ def chatroom_index(chatroom):
     responce += """
     </ul>
     <p><a href="../">Back to chatrooms list</a></p>
+    <hr />
+    <p>Logs collected by <a href="https://github.com/Emojigit/matterlog">Matterlog</a> | 
+    Powered by <a href="https://github.com/Emojigit/matterlog-server">Matterlog Server</a>
+    </p>
     </body>
     </html>
     """
@@ -151,6 +155,10 @@ def chat_log(chatroom, year, month, day):
     </table>
     <p><a href="../../../">Back to chatroom index</a></p>
     <p><a href="../../../../">Back to chatrooms list</a></p>
+    <hr />
+    <p>Logs collected by <a href="https://github.com/Emojigit/matterlog">Matterlog</a> | 
+    Powered by <a href="https://github.com/Emojigit/matterlog-server">Matterlog Server</a>
+    </p>
     </body>
     </html>
     """
