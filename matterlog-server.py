@@ -48,6 +48,10 @@ def index():
 
     responce += """
     </ul>
+    <hr />
+    <p>Logs collected by <a href="https://github.com/Emojigit/matterlog">Matterlog</a> |
+    Powered by <a href="https://github.com/Emojigit/matterlog-server">Matterlog Server</a>
+    </p>
     </body>
     </html>
     """
