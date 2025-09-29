@@ -2,7 +2,7 @@ import os
 from datetime import datetime, date, timedelta
 
 from flask import Flask, Response, request
-from markupsafe import escape as e
+from markupsafe import escape as e, Markup as M
 
 app = Flask(__name__)
 
@@ -184,13 +184,25 @@ def search_chatroom(chatroom):
         </tr>
         """
         for year, month, day, line_number, datetimeobject, user, message in reversed(results):
+            display_message = ""
+            message_pointer = 0
+            while True:
+                match_index = message.lower().find(query, message_pointer)
+                if match_index == -1:
+                    display_message += e(message[message_pointer:])
+                    break
+                display_message += e(message[message_pointer:match_index])
+                display_message += M(
+                    f"<mark>{e(message[match_index:match_index + len(query)])}</mark>")
+                message_pointer = match_index + len(query)
+
             time = datetimeobject.strftime(r'%H:%M:%S')
             responce += "<tr>"
             responce += f"<td class=\"chatlog-date\">{e(year)}-{e(month)}-{e(day)}</td>"
             responce += f"<td class=\"chatlog-lineid\"><a href=\"/chat/{e(chatroom)}/{e(year)}/{e(month)}/{e(day)}/#L{e(line_number)}\">{e(line_number)}</a></td>"
             responce += f"<td class=\"chatlog-time\">{e(time)}</td>"
             responce += f"<td class=\"chatlog-user\">{e(user)}</td>"
-            responce += f"<td class=\"chatlog-message\">{e(message)}</td></tr>"
+            responce += f"<td class=\"chatlog-message\">{display_message}</td></tr>"
         responce += "</table>"
 
     responce += f"""
