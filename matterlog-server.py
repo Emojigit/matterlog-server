@@ -1,4 +1,5 @@
 import os
+import hashlib
 from datetime import datetime, date, timedelta
 
 from flask import Flask, Response, request
@@ -228,6 +229,30 @@ def chat_log(chatroom, year, month, day):
     if not os.path.isfile(log_file_path):
         return Response("Log file not found", status=404, mimetype="text/plain")
 
+    this_day = date(int(year), int(month), int(day))
+    prev_day = this_day - timedelta(days=1)
+    next_day = this_day + timedelta(days=1)
+
+    yesterday_exist = False
+    tomorrow_exist = False
+
+    if os.path.isfile(os.path.join(
+            logs_path, chatroom,
+            f"{prev_day.year:04d}", f"{prev_day.month:02d}", f"{prev_day.day:02d}.txt")):
+        yesterday_exist = True
+
+    if os.path.isfile(os.path.join(
+            logs_path, chatroom,
+            f"{next_day.year:04d}", f"{next_day.month:02d}", f"{next_day.day:02d}.txt")):
+        tomorrow_exist = True
+
+    with open(log_file_path, "rb") as log_file:
+        file_hash = hashlib.file_digest(log_file, "sha256")
+        file_hash_digest = file_hash.hexdigest()
+        etag = f'"{file_hash_digest}:{'Y' if yesterday_exist else ''}{'T' if tomorrow_exist else ''}"'
+        if request.headers.get("If-None-Match") == etag:
+            return Response(status=304)
+
     responce = f"""
     <!DOCTYPE HTML>
     <html lang="en">
@@ -267,17 +292,13 @@ def chat_log(chatroom, year, month, day):
     prev_day = this_day - timedelta(days=1)
     next_day = this_day + timedelta(days=1)
 
-    if os.path.isfile(os.path.join(
-            logs_path, chatroom,
-            f"{prev_day.year:04d}", f"{prev_day.month:02d}", f"{prev_day.day:02d}.txt")):
+    if yesterday_exist:
         responce += f"""
         <p><a href="/chat/{e(chatroom)}/{prev_day.year:04d}/{prev_day.month:02d}/{prev_day.day:02d}/">
         &lt; Previous day ({e(prev_day)})</a></p>
         """
 
-    if os.path.isfile(os.path.join(
-            logs_path, chatroom,
-            f"{next_day.year:04d}", f"{next_day.month:02d}", f"{next_day.day:02d}.txt")):
+    if tomorrow_exist:
         responce += f"""
         <p><a href="/chat/{e(chatroom)}/{next_day.year:04d}/{next_day.month:02d}/{next_day.day:02d}/">
         Next day ({e(next_day)}) &gt;</a></p>
@@ -291,4 +312,4 @@ def chat_log(chatroom, year, month, day):
     </html>
     """
 
-    return Response(responce, mimetype="text/html")
+    return Response(responce, mimetype="text/html", headers={"ETag": etag})
