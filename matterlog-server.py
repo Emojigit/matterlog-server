@@ -17,6 +17,11 @@ if "MATTERLOGSERVER_PROXY_LEVEL" in os.environ:
 logs_path = os.environ.get("MATTERLOGSERVER_LOGS_PATH", "./logs")
 logs_base_url = os.environ.get("MATTERLOGSERVER_LOGS_BASE_URL", "")
 
+common_footer = M("""<hr />
+<footer>Logs collected by <a href="https://github.com/Emojigit/matterlog">Matterlog</a> | 
+Powered by <a href="https://github.com/Emojigit/matterlog-server">Matterlog Server</a>
+</footer>""")
+
 
 def list_chatrooms():
     try:
@@ -46,12 +51,9 @@ def index():
     for chatroom in list_chatrooms():
         responce += f'<li><a href="/chat/{e(chatroom)}/">{e(chatroom)}</a></li>\n'
 
-    responce += """
+    responce += f"""
     </ul>
-    <hr />
-    <p>Logs collected by <a href="https://github.com/Emojigit/matterlog">Matterlog</a> |
-    Powered by <a href="https://github.com/Emojigit/matterlog-server">Matterlog Server</a>
-    </p>
+    {common_footer}
     </body>
     </html>
     """
@@ -108,10 +110,7 @@ def chatroom_index(chatroom):
     <input type="submit" value="Search" />
     </form>
     <p><a href="../../">Back to chatrooms list</a></p>
-    <hr />
-    <p>Logs collected by <a href="https://github.com/Emojigit/matterlog">Matterlog</a> |
-    Powered by <a href="https://github.com/Emojigit/matterlog-server">Matterlog Server</a>
-    </p>
+    {common_footer}
     </body>
     </html>
     """
@@ -213,10 +212,7 @@ def search_chatroom(chatroom):
     </form>
     <p><a href="/chat/{e(chatroom)}/">Back to chatroom index</a></p>
     <p><a href="../../">Back to chatrooms list</a></p>
-    <hr />
-    <p>Logs collected by <a href="https://github.com/Emojigit/matterlog">Matterlog</a> | 
-    Powered by <a href="https://github.com/Emojigit/matterlog-server">Matterlog Server</a>
-    </p>
+    {common_footer}
     </body>
     </html>
     """
@@ -286,13 +282,10 @@ def chat_log(chatroom, year, month, day):
         Next day ({e(next_day)}) &gt;</a></p>
         """
 
-    responce += """
+    responce += f"""
     <p><a href="../../../">Back to chatroom index</a></p>
     <p><a href="../../../../../">Back to chatrooms list</a></p>
-    <hr />
-    <p>Logs collected by <a href="https://github.com/Emojigit/matterlog">Matterlog</a> | 
-    Powered by <a href="https://github.com/Emojigit/matterlog-server">Matterlog Server</a>
-    </p>
+    {common_footer}
     </body>
     </html>
     """
