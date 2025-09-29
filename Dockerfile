@@ -1,7 +1,10 @@
 FROM python:3.13-alpine
 
 COPY requirements.txt /app/requirements.txt
-RUN cd /app && pip install -r requirements.txt && rm requirements.txt
+RUN cd /app && \
+    pip install -r requirements.txt && \
+    pip install gunicorn==23.0.0 && \
+    rm requirements.txt
 
 COPY matterlog-server.py /app/matterlog-server.py
 COPY LICENSE.md /app/LICENSE.md
