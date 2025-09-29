@@ -312,4 +312,15 @@ def chat_log(chatroom, year, month, day):
     </html>
     """
 
-    return Response(responce, mimetype="text/html", headers={"ETag": etag})
+    cache_control = "max-age=60"
+
+    if this_day < datetime.utcnow().date():
+        if tomorrow_exist:
+            cache_control = "max-age=604800, immutable"
+        else:
+            cache_control = "max-age=60, stale-while-revalidate=86400"
+
+    return Response(responce, mimetype="text/html", headers={
+        "ETag": etag,
+        "Cache-Control": cache_control,
+    })
