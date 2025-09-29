@@ -124,8 +124,9 @@ def search_chatroom(chatroom):
     if not os.path.isdir(chatroom_dir):
         return Response("Chatroom not found", status=404, mimetype="text/plain")
 
-    query = request.args.get("q", "").strip().lower()
-    if query == "":
+    query = request.args.get("q", "").strip()
+    normalized_query = query.lower()
+    if normalized_query == "":
         return Response("No search query provided", status=400, mimetype="text/plain")
 
     results = []
@@ -151,7 +152,7 @@ def search_chatroom(chatroom):
                 with open(log_file_path, "r", encoding="utf-8") as log_file:
                     for i, line in enumerate(log_file):
                         datetimestring, user, message = line.strip().split("\t", 2)
-                        if query in message.lower():
+                        if normalized_query in message.lower():
                             datetimeobject = datetime.strptime(
                                 datetimestring, r'%Y-%m-%dT%H:%M:%S.%f%z')
                             results.append(
@@ -186,14 +187,14 @@ def search_chatroom(chatroom):
             display_message = ""
             message_pointer = 0
             while True:
-                match_index = message.lower().find(query, message_pointer)
+                match_index = message.lower().find(normalized_query, message_pointer)
                 if match_index == -1:
                     display_message += e(message[message_pointer:])
                     break
                 display_message += e(message[message_pointer:match_index])
                 display_message += M(
-                    f"<mark>{e(message[match_index:match_index + len(query)])}</mark>")
-                message_pointer = match_index + len(query)
+                    f"<mark>{e(message[match_index:match_index + len(normalized_query)])}</mark>")
+                message_pointer = match_index + len(normalized_query)
 
             time = datetimeobject.strftime(r'%H:%M:%S')
             responce += "<tr>"
