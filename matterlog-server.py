@@ -133,14 +133,12 @@ def search_chatroom(chatroom):
     results = []
 
     for year_dir in sorted(
-            (d for d in os.listdir(chatroom_dir)
-             if os.path.isdir(os.path.join(chatroom_dir, d))),
-            reverse=True
+            d for d in os.listdir(chatroom_dir)
+        if os.path.isdir(os.path.join(chatroom_dir, d))
     ):
         for month_dir in sorted(
-                (d for d in os.listdir(os.path.join(chatroom_dir, year_dir))
-                 if os.path.isdir(os.path.join(chatroom_dir, year_dir, d))),
-            reverse=True
+                d for d in os.listdir(os.path.join(chatroom_dir, year_dir))
+            if os.path.isdir(os.path.join(chatroom_dir, year_dir, d))
         ):
             for day_file in sorted(
                     f for f in os.listdir(os.path.join(chatroom_dir, year_dir, month_dir))
