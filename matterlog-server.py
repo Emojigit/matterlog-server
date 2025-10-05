@@ -279,7 +279,7 @@ def chat_log(chatroom, year, month, day):
                 datetimestring, r'%Y-%m-%dT%H:%M:%S.%f%z')
             time = datetimeobject.strftime(r'%H:%M:%S')
             responce += f"<tr id=\"L{e(i + 1)}\">"
-            responce += f"<td class=\"chatlog-lineid\"><a href=\"#L{e(i + 1)}\">{e(i + 1)}</td>"
+            responce += f"<td class=\"chatlog-lineid\"><a href=\"#L{e(i + 1)}\">{e(i + 1)}</a></td>"
             responce += f"<td class=\"chatlog-time\">{e(time)}</td>"
             responce += f"<td class=\"chatlog-user\">{e(user)}</td>"
             responce += f"<td class=\"chatlog-message\">{e(message)}</td></tr>"
