@@ -185,7 +185,7 @@ def search_chatroom(chatroom):
         responce += "</ul>"
 
     if len(results) > 0:
-        responce += """
+        responce += f"""
         <p>{len(results)} result{"s" if len(results) != 1 else ""} found.</p>
         <table id="chatlog">
         <tr>
