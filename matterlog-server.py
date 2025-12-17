@@ -1,5 +1,6 @@
 import os
 import hashlib
+import traceback
 from datetime import datetime, date, timedelta
 
 from flask import Flask, Response, request
@@ -131,6 +132,7 @@ def search_chatroom(chatroom):
         return Response("No search query provided", status=400, mimetype="text/plain")
 
     results = []
+    error_files = []
 
     for year_dir in sorted(
             d for d in os.listdir(chatroom_dir)
@@ -148,14 +150,20 @@ def search_chatroom(chatroom):
                 day = day_file[:-4]
                 log_file_path = os.path.join(
                     chatroom_dir, year_dir, month_dir, day_file)
-                with open(log_file_path, "r", encoding="utf-8") as log_file:
-                    for i, line in enumerate(log_file):
-                        datetimestring, user, message = line.strip().split("\t", 2)
-                        if normalized_query in message.lower():
-                            datetimeobject = datetime.strptime(
-                                datetimestring, r'%Y-%m-%dT%H:%M:%S.%f%z')
-                            results.append(
-                                (year_dir, month_dir, day, i + 1, datetimeobject, user, message))
+
+                try:
+                    with open(log_file_path, "r", encoding="utf-8") as log_file:
+                        for i, line in enumerate(log_file):
+                            datetimestring, user, message = line.strip().split("\t", 2)
+                            if normalized_query in message.lower():
+                                datetimeobject = datetime.strptime(
+                                    datetimestring, r'%Y-%m-%dT%H:%M:%S.%f%z')
+                                results.append(
+                                    (year_dir, month_dir, day, i + 1, datetimeobject, user, message))
+                except Exception:
+                    error_files.append(log_file_path)
+                    print("Error in parsing log file", log_file_path, ":")
+                    print(traceback.format_exc())
 
     responce = f"""
     <!DOCTYPE HTML>
@@ -168,11 +176,17 @@ def search_chatroom(chatroom):
     </head>
     <body>
     <h1>Search results for "{e(query)}" in {e(chatroom)}</h1>
-    <p>{len(results)} result{"s" if len(results) != 1 else ""} found.</p>
     """
+
+    if len(error_files) > 0:
+        responce += "<p class=\"error\"><b>Warning:</b> Some log files could not be read or parsed:</p><ul>"
+        for error_file in error_files:
+            responce += f"<li>{e(error_file)}</li>"
+        responce += "</ul>"
 
     if len(results) > 0:
         responce += """
+        <p>{len(results)} result{"s" if len(results) != 1 else ""} found.</p>
         <table id="chatlog">
         <tr>
         <th>Date</th>
@@ -203,6 +217,8 @@ def search_chatroom(chatroom):
             responce += f"<td class=\"chatlog-user\">{e(user)}</td>"
             responce += f"<td class=\"chatlog-message\">{display_message}</td></tr>"
         responce += "</table>"
+    else:
+        responce += "<p>No results found.</p>"
 
     responce += f"""
     <form method="get" action=".">
