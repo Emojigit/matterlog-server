@@ -154,7 +154,9 @@ def search_chatroom(chatroom):
                 try:
                     with open(log_file_path, "r", encoding="utf-8") as log_file:
                         for i, line in enumerate(log_file):
-                            datetimestring, user, message = line.strip().split("\t", 2)
+                            parts = line.strip().split("\t", 2)
+                            datetimestring, user = parts[0], parts[1]
+                            message = parts[2] if len(parts) > 2 else ""
                             if normalized_query in message.lower():
                                 datetimeobject = datetime.strptime(
                                     datetimestring, r'%Y-%m-%dT%H:%M:%S.%f%z')
