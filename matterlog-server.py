@@ -179,10 +179,11 @@ def search_chatroom(chatroom):
     """
 
     if len(error_files) > 0:
-        responce += "<p class=\"error\"><b>Warning:</b> Some log files could not be read or parsed:</p><ul>"
+        responce += "<div class=\"error\">"
+        responce += "<p><b>Warning:</b> Some log files could not be read or parsed:</p><ul>"
         for error_file in error_files:
             responce += f"<li>{e(error_file)}</li>"
-        responce += "</ul>"
+        responce += "</ul></div>"
 
     if len(results) > 0:
         responce += f"""
