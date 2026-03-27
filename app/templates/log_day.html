@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Chat log for {{ chatroom }} on {{ year }}-{{ month }}-{{ day }} - Matterlog{% endblock %}
+
+{% block heading %}Chat log for {{ chatroom }} on {{ year }}-{{ month }}-{{ day }}{% endblock %}
+
+{% block content %}
+<table id="chatlog">
+<tr><th>#</th><th>Time</th><th>User</th><th>Message</th></tr>
+{% for entry in entries %}
+<tr id="L{{ entry.line_number }}">
+<td class="chatlog-lineid"><a href="#L{{ entry.line_number }}">{{ entry.line_number }}</a></td>
+<td class="chatlog-time">{{ entry.time }}</td>
+<td class="chatlog-user">{{ entry.user }}</td>
+<td class="chatlog-message">{{ parse_message(entry.message) }}</td>
+</tr>
+{% endfor %}
+</table>
+
+{% if yesterday_exist %}
+<p><a href="{{ url_for('chat.log_day', chatroom=chatroom, year=prev_day.year, month=prev_day.month, day=prev_day.day) }}">
+&lt; Previous day ({{ prev_day }})</a></p>
+{% endif %}
+
+{% if tomorrow_exist %}
+<p><a href="{{ url_for('chat.log_day', chatroom=chatroom, year=next_day.year, month=next_day.month, day=next_day.day) }}">
+Next day ({{ next_day }}) &gt;</a></p>
+{% endif %}
+
+<p><a href="{{ url_for('main.chatroom_index', chatroom=chatroom) }}">Back to chatroom index</a></p>
+<p><a href="{{ url_for('main.index') }}">Back to chatrooms list</a></p>
+{% endblock %}

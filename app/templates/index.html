@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}List of chatrooms - Matterlog{% endblock %}
+
+{% block content %}
+<h1>List of chatrooms</h1>
+<ul>
+{% for chatroom in chatrooms %}
+<li><a href="{{ url_for('main.chatroom_index', chatroom=chatroom) }}">{{ chatroom }}</a></li>
+{% endfor %}
+</ul>
+{% endblock %}

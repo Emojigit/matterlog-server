@@ -31,3 +31,21 @@
 .error {
     color: red;
 }
+
+.footer-list {
+    margin: 0;
+    padding: 0;
+}
+
+.footer-list li {
+    margin: 0;
+    display: inline;
+}
+
+.footer-list li::after {
+    content: "\a0| ";
+}
+
+.footer-list li:last-child::after {
+    content: none;
+}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Search results for "{{ query }}" in {{ chatroom }} - Matterlog{% endblock %}
+
+{% block heading %}Search results for "{{ query }}" in {{ chatroom }}{% endblock %}
+
+{% block content %}
+{% if error_files %}
+<div class="error">
+<p><b>Warning:</b> Some log files could not be read or parsed:</p><ul>
+{% for error_file in error_files %}
+<li>{{ error_file }}</li>
+{% endfor %}
+</ul></div>
+{% endif %}
+
+{% if results %}
+<p>{{ results|length }} result{% if results|length != 1 %}s{% endif %} found.</p>
+<table id="chatlog">
+<tr>
+<th>Date</th>
+<th>#</th>
+<th>time</th>
+<th>User</th>
+<th>Message</th>
+</tr>
+{% for result in results %}
+<tr>
+<td class="chatlog-date">{{ result.year }}-{{ result.month }}-{{ result.day }}</td>
+<td class="chatlog-lineid">
+<a href="{{ url_for('chat.log_day', chatroom=chatroom, year=result.year, month=result.month, day=result.day) }}#L{{ result.line_number }}">{{ result.line_number }}</a>
+</td>
+<td class="chatlog-time">{{ result.time }}</td>
+<td class="chatlog-user">{{ result.user }}</td>
+<td class="chatlog-message">{{ result.message|safe }}</td>
+</tr>
+{% endfor %}
+</table>
+{% else %}
+<p>No results found.</p>
+{% endif %}
+
+<form method="get" action="{{ url_for('search.search_chatroom', chatroom=chatroom) }}">
+<label for="q">Search in this chatroom:</label>
+<input type="text" id="q" name="q" value="{{ query }}" required />
+<input type="submit" value="Search" />
+</form>
+
+<p><a href="{{ url_for('main.chatroom_index', chatroom=chatroom) }}">Back to chatroom index</a></p>
+<p><a href="{{ url_for('main.index') }}">Back to chatrooms list</a></p>
+{% endblock %}

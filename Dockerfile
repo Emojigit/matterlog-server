@@ -6,10 +6,11 @@ RUN cd /app && \
     pip install gunicorn==23.0.0 && \
     rm requirements.txt
 
-COPY matterlog-server.py /app/matterlog-server.py
+COPY app /app/app
+COPY wsgi.py /app/wsgi.py
 COPY LICENSE.md /app/LICENSE.md
 COPY COPYING.txt /app/COPYING.txt
 
 WORKDIR /app
 VOLUME ["/app/logs"]
-ENTRYPOINT ["python", "-u", "-m", "gunicorn", "matterlog-server:app"]
+ENTRYPOINT ["python", "-u", "-m", "gunicorn", "wsgi:app"]

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Chatroom {{ chatroom }} - Matterlog{% endblock %}
+
+{% block heading %}Chatroom {{ chatroom }}{% endblock %}
+
+{% block content %}
+{% if logs_base_url %}
+<p><a href="{{ logs_base_url }}/{{ chatroom }}/">Browse raw logs</a></p>
+{% endif %}
+
+<ul>
+{% for year, months in years_months %}
+{% for month, days in months %}
+<li>{{ year }}-{{ month }}:
+{% for day in days %}
+<a href="{{ url_for('chat.log_day', chatroom=chatroom, year=year, month=month, day=day) }}">{{ day }}</a>
+{% endfor %}
+</li>
+{% endfor %}
+{% endfor %}
+</ul>
+
+<form method="get" action="{{ url_for('search.search_chatroom', chatroom=chatroom) }}">
+<label for="q">Search in this chatroom:</label>
+<input type="text" id="q" name="q" required />
+<input type="submit" value="Search" />
+</form>
+
+<p><a href="{{ url_for('main.index') }}">Back to chatrooms list</a></p>
+{% endblock %}
