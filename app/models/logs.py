@@ -3,6 +3,7 @@ import re
 from urllib.parse import quote as urlquote
 from datetime import datetime
 from markupsafe import Markup
+from flask import render_template
 
 
 def list_chatrooms(logs_path):
@@ -65,6 +66,20 @@ PARSE_MESSAGE_URL_REGEX = re.compile(r"(https?://[^\s'\";]*[^\s'\";,\.])")
 
 
 def parse_message(message_text: str, search_key: str = None):
+    # This is an attachment if starting with !Attachment
+    if message_text.startswith("!Attachment"):
+        # Texts after !Attachment is tab-separated key-value pairs, where the value may be empty
+        # For example: !Attachment name:example.txt size:12345 url:https://example.com/file.txt comment:This is an example file
+        file = {}
+        for part in message_text[12:].split("\t"):
+            if ":" in part:
+                key, value = part.split(":", 1)
+                file[key] = value
+        if 'url' not in file and 'b64data' in file and 'b64mime' in file:
+            # If url is not provided, but b64data and b64mime are provided, we can create a data URL
+            file['url'] = f"data:{file['b64mime']};base64,{file['b64data']}"
+        return Markup(render_template('log_line/attachment.html', file=file))
+
     # Find all links, according to Luanti's method
     messages_split = re.split(PARSE_MESSAGE_URL_REGEX, message_text)
     message_text = ""

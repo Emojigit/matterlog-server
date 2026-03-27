@@ -28,6 +28,10 @@
     font-family: monospace;
 }
 
+.chatlog-special {
+    font-style: italic;
+}
+
 .error {
     color: red;
 }

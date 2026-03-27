@@ -1,0 +1,24 @@
+<div class="chatlog-special chatlog-attachment">
+    Attachment:
+    {% if file.url is defined -%}
+        <a href="{{ file.url | safe }}">
+            {%- if file.name is defined -%}
+                {{ file.name }}
+            {%- else -%}
+                No name
+            {%- endif -%}
+        </a>
+    {%- else -%}
+        {%- if file.name is defined -%}
+            {{ file.name }}
+        {%- else -%}
+            No name
+        {%- endif -%}
+    {%- endif %}
+    {% if file.size is defined -%}
+        ({{ file.size }} bytes)
+    {%- endif %}
+    {% if file.comment is defined -%}
+        : {{ file.comment }}
+    {%- endif -%}
+</div>
