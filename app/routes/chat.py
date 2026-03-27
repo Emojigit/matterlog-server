@@ -3,6 +3,7 @@ import hashlib
 from datetime import date, timedelta
 from flask import Blueprint, render_template, request, current_app
 from ..models import logs
+from flask import make_response
 
 bp = Blueprint('chat', __name__)
 
@@ -55,8 +56,9 @@ def log_day(chatroom, year, month, day):
 
     # Parse log file
     entries = tuple(line for line in logs.parse_log_file(log_file_path))
+    # Add cache control header for today's logs
 
-    return render_template(
+    response = make_response(render_template(
         'log_day.html',
         chatroom=chatroom,
         year=year,
@@ -67,4 +69,9 @@ def log_day(chatroom, year, month, day):
         tomorrow_exist=tomorrow_exist,
         prev_day=prev_day,
         next_day=next_day
-    )
+    ))
+
+    if this_day == date.today():
+        response.headers['Cache-Control'] = 'max-age=60'
+
+    return response
