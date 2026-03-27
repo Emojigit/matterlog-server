@@ -5,6 +5,7 @@
 {% block heading %}Chat log for {{ chatroom }} on {{ year }}-{{ month }}-{{ day }}{% endblock %}
 
 {% block content %}
+<p><a href="{{ config.CHAT_LOG_URL_PREFIX }}/{{ chatroom }}/{{ year }}/{{ month }}/{{ day }}.log">Download raw log file</a></p>
 <table id="chatlog">
 <tr><th>#</th><th>Time</th><th>User</th><th>Message</th></tr>
 {% for entry in entries %}
